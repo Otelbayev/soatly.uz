@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ].filter(Boolean) as string[],
       alternates: { canonical: url },
       openGraph: {
-        title: `${titleBase} | SOATLY`,
+        title: `${titleBase} · SOATLY`,
         description,
         url,
         siteName: 'SOATLY',
@@ -51,7 +51,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
       twitter: {
         card: 'summary_large_image',
-        title: `${titleBase} | SOATLY`,
+        title: `${titleBase} · SOATLY`,
         description,
         images: images.length ? images.map((i) => i.url) : undefined,
       },

@@ -14,14 +14,14 @@ export const metadata: Metadata = {
   keywords: ['soat kategoriyalari', 'sport soat', 'klassik soat', 'lyuks soat', 'biznes soat', 'soatly.uz'],
   alternates: { canonical: `${BASE_URL}/categories` },
   openGraph: {
-    title: `${TITLE} | SOATLY`,
+    title: `${TITLE} · SOATLY`,
     description: DESC,
     url: `${BASE_URL}/categories`,
     siteName: 'SOATLY',
     type: 'website',
     locale: 'uz_UZ',
   },
-  twitter: { card: 'summary_large_image', title: `${TITLE} | SOATLY`, description: DESC },
+  twitter: { card: 'summary_large_image', title: `${TITLE} · SOATLY`, description: DESC },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large' } },
 };
 

@@ -14,14 +14,14 @@ export const metadata: Metadata = {
   keywords: ['Rolex', 'Omega', 'Patek Philippe', 'Audemars Piguet', 'soat brendlari', 'lyuks soat brendlari', 'soatly.uz'],
   alternates: { canonical: `${BASE_URL}/brands` },
   openGraph: {
-    title: `${TITLE} | SOATLY`,
+    title: `${TITLE} · SOATLY`,
     description: DESC,
     url: `${BASE_URL}/brands`,
     siteName: 'SOATLY',
     type: 'website',
     locale: 'uz_UZ',
   },
-  twitter: { card: 'summary_large_image', title: `${TITLE} | SOATLY`, description: DESC },
+  twitter: { card: 'summary_large_image', title: `${TITLE} · SOATLY`, description: DESC },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large' } },
 };
 

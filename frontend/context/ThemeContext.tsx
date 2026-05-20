@@ -13,19 +13,13 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('dark');
+  const [theme, setThemeState] = useState<Theme>('light');
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY) as Theme | null;
-    if (saved) {
-      setThemeState(saved);
-      document.documentElement.setAttribute('data-theme', saved);
-    } else {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const initial: Theme = prefersDark ? 'dark' : 'light';
-      setThemeState(initial);
-      document.documentElement.setAttribute('data-theme', initial);
-    }
+    const initial: Theme = saved ?? 'light';
+    setThemeState(initial);
+    document.documentElement.setAttribute('data-theme', initial);
   }, []);
 
   const setTheme = useCallback((t: Theme) => {

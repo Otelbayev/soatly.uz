@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       keywords: [b.name_uz, `${b.name_uz} soat`, `${b.name_uz} narxi`, 'soat', 'qo\'l soati', 'soatly.uz', 'luxury watches'],
       alternates: { canonical: url },
       openGraph: {
-        title: `${title} | SOATLY`,
+        title: `${title} · SOATLY`,
         description,
         url,
         siteName: 'SOATLY',
@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
       twitter: {
         card: 'summary_large_image',
-        title: `${title} | SOATLY`,
+        title: `${title} · SOATLY`,
         description,
         images: b.icon ? [b.icon] : undefined,
       },

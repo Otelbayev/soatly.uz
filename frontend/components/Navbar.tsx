@@ -62,7 +62,7 @@ export default function Navbar() {
     <>
       <header
         className={clsx(
-          'fixed top-0 left-0 right-0 z-50 transition-all duration-300 pt-safe',
+          'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
           scrolled ? 'glass-nav py-2.5 sm:py-3' : 'py-3 sm:py-5'
         )}
         style={!scrolled ? { background: 'transparent' } : undefined}
@@ -97,13 +97,14 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* Actions — desktop'da hamma toggle, mobile'da faqat cart + menu */}
+          {/* Actions — desktop'da hamma toggle, mobile'da theme + cart + menu */}
           <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             <div className="hidden md:flex items-center gap-2.5">
               <CurrencyToggle />
               <LanguageSwitcher />
-              <ThemeToggle />
             </div>
+
+            <ThemeToggle />
 
             <Link
               href="/cart"
@@ -218,7 +219,6 @@ export default function Navbar() {
               <div className="flex items-center gap-2">
                 <CurrencyToggle />
                 <LanguageSwitcher />
-                <ThemeToggle />
               </div>
             </div>
           </aside>

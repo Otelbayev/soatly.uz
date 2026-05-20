@@ -4,7 +4,6 @@ import CategorySection from '@/components/CategorySection';
 import BrandSection from '@/components/BrandSection';
 import HomeSections from '@/components/HomeSections';
 import StatsSection from '@/components/StatsSection';
-import WhyUsSection from '@/components/WhyUsSection';
 import ProcessSection from '@/components/ProcessSection';
 import { api } from '@/lib/api';
 
@@ -26,7 +25,6 @@ export default async function HomePage() {
       <HeroSection />
       <StatsSection />
       <CategorySection categories={categories} />
-      <WhyUsSection />
       <BrandSection brands={brands} />
       <FeaturedSection products={featured} />
       <ProcessSection />

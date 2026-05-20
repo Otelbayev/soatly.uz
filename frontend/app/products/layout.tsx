@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   keywords: ['soat', 'qo\'l soati', 'lyuks soat', 'Rolex narxi', 'Omega narxi', 'soatly.uz', 'luxury watches Uzbekistan'],
   alternates: { canonical: `${BASE_URL}/products` },
   openGraph: {
-    title: `${TITLE} | SOATLY`,
+    title: `${TITLE} · SOATLY`,
     description: DESC,
     url: `${BASE_URL}/products`,
     siteName: 'SOATLY',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${TITLE} | SOATLY`,
+    title: `${TITLE} · SOATLY`,
     description: DESC,
     images: ['/og-image.jpg'],
   },
