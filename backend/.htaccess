@@ -1,0 +1,25 @@
+# Phusion Passenger Node.js app config (cPanel / ahost.uz)
+PassengerNodejs /opt/cpanel/ea-nodejs24/bin/node
+PassengerAppType node
+PassengerStartupFile app.js
+PassengerAppRoot /home/soatlyuz/soatly.uz/backend
+
+# Allow all HTTP methods (some shared hosts block POST/PUT/DELETE by default)
+<LimitExcept GET POST PUT DELETE PATCH OPTIONS HEAD>
+    Order deny,allow
+    Deny from all
+</LimitExcept>
+
+# Pass Authorization header to Node.js (some hosts strip it)
+RewriteEngine On
+RewriteCond %{HTTP:Authorization} ^(.*)
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%1]
+
+# Disable ModSecurity rules that block JSON POST bodies (if available)
+<IfModule mod_security.c>
+    SecRuleEngine Off
+    SecRequestBodyAccess Off
+</IfModule>
+
+# Increase request body size
+LimitRequestBody 10485760

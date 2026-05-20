@@ -1,4 +1,4 @@
-import { verifyAccessToken } from "../utils/jwt.js";
+import { verifyToken } from "../utils/jwt.js";
 
 const extractToken = (req) => {
   const header = req.headers.authorization || req.headers.Authorization;
@@ -15,9 +15,8 @@ export const authenticate = (req, res, next) => {
       return res.status(401).json({ error: "Avtorizatsiya talab qilinadi" });
     }
 
-    const payload = verifyAccessToken(token);
+    const payload = verifyToken(token);
     req.user = {
-      id: payload.sub,
       username: payload.username,
       role: payload.role,
     };

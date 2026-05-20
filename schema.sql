@@ -5,17 +5,14 @@
 -- orqali bir martada ishga tushirish mumkin.
 --
 -- ICHIDA:
---   • Barcha CREATE TABLE (users, refresh_tokens, brands,
---     categories, products, product_categories, orders, order_items)
+--   • Barcha CREATE TABLE (brands, categories, products,
+--     product_categories, orders, order_items)
 --   • Indekslar
 --   • updated_at trigger funksiyasi + triggerlar
---   • Default admin foydalanuvchi (faqat shu bitta INSERT)
 --
--- DEFAULT ADMIN LOGIN MA'LUMOTLARI:
---   username: superadmin_soatly
---   password: Sx7$mK9!pQ2vN&jR4#wL8
---
--- ⚠️ MUHIM: birinchi loginadan keyin parolni o'zgartiring!
+-- AUTH BU YERDA YO'Q:
+--   Admin login/parol .env faylida saqlanadi
+--   (ADMIN_USERNAME / ADMIN_PASSWORD), JWT token bilan
 -- =====================================================
 
 BEGIN;
@@ -30,31 +27,6 @@ BEGIN
     RETURN NEW;
 END;
 $$ language 'plpgsql';
-
--- =====================================================
--- AUTH: users + refresh_tokens
--- =====================================================
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(64) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
-    role VARCHAR(20) NOT NULL DEFAULT 'admin' CHECK (role IN ('admin', 'user')),
-    is_active BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE refresh_tokens (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    token_hash VARCHAR(255) NOT NULL UNIQUE,
-    expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
-    revoked_at TIMESTAMP WITH TIME ZONE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE INDEX idx_refresh_tokens_user ON refresh_tokens(user_id);
-CREATE INDEX idx_refresh_tokens_hash ON refresh_tokens(token_hash);
 
 -- =====================================================
 -- BRANDS
@@ -168,11 +140,6 @@ CREATE INDEX idx_order_items_product ON order_items(product_id);
 -- =====================================================
 -- UPDATED_AT TRIGGERLAR
 -- =====================================================
-CREATE TRIGGER update_users_modtime
-    BEFORE UPDATE ON users
-    FOR EACH ROW
-    EXECUTE PROCEDURE update_modified_column();
-
 CREATE TRIGGER update_brands_modtime
     BEFORE UPDATE ON brands
     FOR EACH ROW
@@ -192,26 +159,5 @@ CREATE TRIGGER update_orders_modtime
     BEFORE UPDATE ON orders
     FOR EACH ROW
     EXECUTE PROCEDURE update_modified_column();
-
--- =====================================================
--- DEFAULT ADMIN
--- username: superadmin_soatly
--- password: Sx7$mK9!pQ2vN&jR4#wL8
--- (bcrypt cost=12 bilan hashlangan)
--- =====================================================
-INSERT INTO users (username, password_hash, role, is_active, updated_at)
-VALUES (
-    'superadmin_soatly',
-    '$2b$12$NLOhB1h.nULRS6XJK3TMpOAe18ZFn0zRoxn.K5cWvOUN1EGYgpuZ2',
-    'admin',
-    TRUE,
-    NOW()
-)
-ON CONFLICT (username) DO UPDATE
-SET
-    password_hash = EXCLUDED.password_hash,
-    role = 'admin',
-    is_active = TRUE,
-    updated_at = NOW();
 
 COMMIT;
