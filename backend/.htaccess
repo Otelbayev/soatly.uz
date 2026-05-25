@@ -1,8 +1,11 @@
-# Phusion Passenger Node.js app config (cPanel / ahost.uz)
-PassengerNodejs /opt/cpanel/ea-nodejs24/bin/node
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
+PassengerAppRoot "/home/soatlyuz/backend"
+PassengerBaseURI "/"
+PassengerNodejs "/home/soatlyuz/nodevenv/backend/24/bin/node"
 PassengerAppType node
 PassengerStartupFile app.js
-PassengerAppRoot /home/soatlyuz/soatly.uz/backend
+PassengerAppLogFile "/home/soatlyuz/logs/backend.log"
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
 
 # Allow all HTTP methods (some shared hosts block POST/PUT/DELETE by default)
 <LimitExcept GET POST PUT DELETE PATCH OPTIONS HEAD>
@@ -21,5 +24,26 @@ RewriteRule .* - [E=HTTP_AUTHORIZATION:%1]
     SecRequestBodyAccess Off
 </IfModule>
 
-# Increase request body size
+# Increase request body size (10 MB)
 LimitRequestBody 10485760
+
+# =====================================================
+# CORS HEADERS (Apache darajasida — Node CORS'ga qo'shimcha)
+# Faqat ruxsat etilgan origin'lar uchun header qo'shadi
+# =====================================================
+<IfModule mod_headers.c>
+    SetEnvIf Origin "^https?://(www\.)?soatly\.uz$" CORS_ORIGIN=$0
+    SetEnvIf Origin "^http://localhost(:[0-9]+)?$" CORS_ORIGIN=$0
+    SetEnvIf Origin "^http://127\.0\.0\.1(:[0-9]+)?$" CORS_ORIGIN=$0
+    Header always set Access-Control-Allow-Origin "%{CORS_ORIGIN}e" env=CORS_ORIGIN
+    Header always set Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS" env=CORS_ORIGIN
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, Accept, Origin" env=CORS_ORIGIN
+    Header always set Access-Control-Max-Age "86400" env=CORS_ORIGIN
+    Header always set Vary "Origin"
+
+    # Engintron/nginx keshini API uchun o'chirish
+    # (dinamik API javoblari keshlanishi xato — CORS header'larini buzadi)
+    Header always set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header always set Pragma "no-cache"
+    Header always set Expires "0"
+</IfModule>

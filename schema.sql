@@ -1,21 +1,25 @@
 -- =====================================================
 -- SOATLY.UZ — TO'LIQ DATABASE SCHEMA (PostgreSQL)
 -- =====================================================
--- Bu faylni cPanel > PostgreSQL > phpPgAdmin (yoki SQL Editor)
--- orqali bir martada ishga tushirish mumkin.
+-- Bu faylni cPanel > phpPgAdmin > SQL bo'limida bir martda
+-- ishga tushiring. Eski jadvallarni o'chiradi va qaytadan
+-- yaratadi, soatlyuz_myuser ga to'liq ruxsat beradi.
 --
--- ICHIDA:
---   • Barcha CREATE TABLE (brands, categories, products,
---     product_categories, orders, order_items)
---   • Indekslar
---   • updated_at trigger funksiyasi + triggerlar
---
--- AUTH BU YERDA YO'Q:
---   Admin login/parol .env faylida saqlanadi
---   (ADMIN_USERNAME / ADMIN_PASSWORD), JWT token bilan
+-- DIQQAT: BU FAYL MAVJUD MA'LUMOTLARNI O'CHIRADI!
 -- =====================================================
 
 BEGIN;
+
+-- =====================================================
+-- ESKI OBYEKTLARNI TOZALASH
+-- =====================================================
+DROP TABLE IF EXISTS order_items         CASCADE;
+DROP TABLE IF EXISTS orders              CASCADE;
+DROP TABLE IF EXISTS product_categories  CASCADE;
+DROP TABLE IF EXISTS products            CASCADE;
+DROP TABLE IF EXISTS categories          CASCADE;
+DROP TABLE IF EXISTS brands              CASCADE;
+DROP FUNCTION IF EXISTS update_modified_column() CASCADE;
 
 -- =====================================================
 -- UPDATED_AT TRIGGER FUNKSIYASI
@@ -131,10 +135,10 @@ CREATE TABLE order_items (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_orders_status ON orders(status);
+CREATE INDEX idx_orders_status     ON orders(status);
 CREATE INDEX idx_orders_created_at ON orders(created_at DESC);
-CREATE INDEX idx_orders_phone ON orders(customer_phone);
-CREATE INDEX idx_order_items_order ON order_items(order_id);
+CREATE INDEX idx_orders_phone      ON orders(customer_phone);
+CREATE INDEX idx_order_items_order   ON order_items(order_id);
 CREATE INDEX idx_order_items_product ON order_items(product_id);
 
 -- =====================================================
@@ -159,5 +163,26 @@ CREATE TRIGGER update_orders_modtime
     BEFORE UPDATE ON orders
     FOR EACH ROW
     EXECUTE PROCEDURE update_modified_column();
+
+-- =====================================================
+-- GRANT — soatlyuz_myuser ga to'liq ruxsatlar
+-- (Ownership o'zgartirilmaydi — shared hosting'da odatda ruxsat yo'q.
+--  GRANT bilan SELECT/INSERT/UPDATE/DELETE uchun yetadi.)
+-- =====================================================
+GRANT USAGE, CREATE ON SCHEMA public TO soatlyuz_myuser;
+
+GRANT ALL PRIVILEGES ON ALL TABLES    IN SCHEMA public TO soatlyuz_myuser;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO soatlyuz_myuser;
+GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO soatlyuz_myuser;
+
+-- Kelajakda yangi yaratiladigan obyektlar uchun avtomatik ruxsat
+ALTER DEFAULT PRIVILEGES IN SCHEMA public
+    GRANT ALL ON TABLES TO soatlyuz_myuser;
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA public
+    GRANT ALL ON SEQUENCES TO soatlyuz_myuser;
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA public
+    GRANT ALL ON FUNCTIONS TO soatlyuz_myuser;
 
 COMMIT;
